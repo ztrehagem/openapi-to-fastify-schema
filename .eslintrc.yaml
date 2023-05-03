@@ -23,7 +23,6 @@ rules:
       ignoreRestSiblings: true
   "@typescript-eslint/no-non-null-assertion": off
   "@typescript-eslint/consistent-type-imports": error
-# overrides:
-#   - files: ["demo/**/*.js"]
-#     rules:
-#       - "@typescript-eslint/no-unsafe-call": off
+
+ignorePatterns:
+  - "demo/usage.ts"
