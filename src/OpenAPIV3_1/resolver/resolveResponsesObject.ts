@@ -26,7 +26,13 @@ export const resolveResponsesObject = async (
 
     const resolvedResponseObject = {
       ...resolved,
-      content: resolved.content ?? {},
+
+      // declare empty text content to avoid fastify error
+      content: resolved.content ?? {
+        "text/plain": {
+          schema: {},
+        },
+      },
     };
 
     return [status, resolvedResponseObject];
