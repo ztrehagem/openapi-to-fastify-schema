@@ -1,7 +1,7 @@
 {
   "name": "@ztrehagem/openapi-to-fastify-schema",
   "description": "Generate schema objects for Fastify from OpenAPI documents",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "publishConfig": {
     "access": "public"
   },
