@@ -1,0 +1,57 @@
+{
+  "name": "@ztrehagem/openapi-to-fastify-schema",
+  "description": "Generate schema objects for Fastify from OpenAPI documents",
+  "version": "0.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "./dist/main.js",
+  "bin": "./dist/bin.js",
+  "exports": {
+    ".": "./dist/main.js",
+    "./generated": "./.generated/operationMap.js"
+  },
+  "packageManager": "pnpm@8.3.1",
+  "scripts": {
+    "prepare": "pnpm run build",
+    "build": "tsc",
+    "start": "node ./demo/start.js",
+    "typecheck": "tsc --noEmit",
+    "eslint": "eslint --cache --ignore-path .gitignore --max-warnings 0 .",
+    "prettier": "prettier --cache --ignore-path .gitignore --check . '!pnpm-lock.yaml'",
+    "fix": "pnpm run fix:eslint && pnpm run fix:prettier",
+    "fix:eslint": "pnpm run eslint --fix",
+    "fix:prettier": "pnpm run prettier --write"
+  },
+  "dependencies": {
+    "yaml": "^2.2.2"
+  },
+  "devDependencies": {
+    "@fastify/type-provider-json-schema-to-ts": "^2.2.2",
+    "@types/node": "^18.16.3",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.39.0",
+    "eslint-config-prettier": "^8.8.0",
+    "fastify": "^4.17.0",
+    "openapi-types": "^12.1.0",
+    "prettier": "^2.8.8",
+    "typescript": "^5.0.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ztrehagem/openapi-to-fastify-schema.git"
+  },
+  "keywords": [
+    "openapi",
+    "fastify",
+    "schema"
+  ],
+  "author": "Shigeki Suwa <shigeki.suwa@ztrehagem.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ztrehagem/openapi-to-fastify-schema/issues"
+  },
+  "homepage": "https://github.com/ztrehagem/openapi-to-fastify-schema#readme"
+}

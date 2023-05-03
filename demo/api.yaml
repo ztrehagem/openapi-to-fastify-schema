@@ -1,0 +1,392 @@
+openapi: 3.1.0
+
+info:
+  title: Sample
+  version: 0.0.0
+
+tags:
+  - name: Authentication
+  - name: User
+  - name: Post
+  - name: Streaming
+
+paths:
+  /api/auth:
+    get:
+      operationId: getAuthentication
+      tags:
+        - Authentication
+      security:
+        - AccessToken: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                required:
+                  - user
+        401:
+          description: Unauthorized
+    post:
+      operationId: createAuthentication
+      tags:
+        - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                handle:
+                  type: string
+                password:
+                  type: string
+                  format: password
+              required:
+                - handle
+                - password
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+                required:
+                  - user
+                  - accessToken
+                  - refreshToken
+        400:
+          description: Bad Request
+    put:
+      operationId: refreshAuthentication
+      tags:
+        - Authentication
+      security:
+        - RefreshToken: []
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+                required:
+                  - user
+                  - accessToken
+                  - refreshToken
+        401:
+          description: Unauthorized
+    delete:
+      operationId: deleteAuthentication
+      tags:
+        - Authentication
+      security:
+        - AccessToken: []
+      responses:
+        204:
+          description: No Content
+        401:
+          description: Unauthorized
+
+  /api/users:
+    get:
+      operationId: indexUser
+      tags:
+        - User
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+                required:
+                  - users
+    post:
+      operationId: createUser
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                handle:
+                  type: string
+                  minLength: 1
+                  maxLength: 64
+                name:
+                  type: string
+                  minLength: 0
+                  maxLength: 64
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  maxLength: 255
+              required:
+                - handle
+                - name
+                - password
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+                required:
+                  - user
+                  - accessToken
+                  - refreshToken
+        400:
+          description: Bad Request
+        409:
+          description: Conflicted
+
+  /api/users/{userHandle}:
+    parameters:
+      - name: userHandle
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UserHandle"
+    get:
+      operationId: getUser
+      tags:
+        - User
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                required:
+                  - user
+                additionalProperties: false
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+    patch:
+      operationId: updateUser
+      tags:
+        - User
+      security:
+        - AccessToken: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 0
+                  maxLength: 64
+                currentPassword:
+                  type: string
+                  format: password
+                newPassword:
+                  type: string
+                  format: password
+                  minLength: 8
+                  maxLength: 255
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+    delete:
+      operationId: deleteUser
+      tags:
+        - User
+      security:
+        - AccessToken: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  format: password
+              required:
+                - password
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+
+  /api/posts:
+    post:
+      operationId: createPost
+      tags:
+        - Post
+      security:
+        - AccessToken: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+              required:
+                - body
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  post:
+                    $ref: "#/components/schemas/Post"
+                required:
+                  - post
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+
+  /api/stream/sse/timeline:
+    get:
+      operationId: streamTimelineSSE
+      tags:
+        - Streaming
+      parameters:
+        - name: scope
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/TimelineScope"
+      responses:
+        200:
+          description: OK
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        handle:
+          $ref: "#/components/schemas/UserHandle"
+        name:
+          type:
+            - string
+            - "null"
+          example: "John Doe ✌"
+      required:
+        - handle
+        - name
+    UserHandle:
+      type: string
+      example: "JohnDoe123"
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        body:
+          type: string
+        dateTime:
+          type: string
+          format: date-time
+        user:
+          $ref: "#/components/schemas/User"
+      required:
+        - id
+        - body
+        - dateTime
+        - user
+    TimelineScope:
+      type: string
+      enum:
+        - local
+    TimelineEntry:
+      type: object
+      properties:
+        id:
+          type: string
+        post:
+          $ref: "#/components/schemas/Post"
+      required:
+        - id
+        - post
+
+  securitySchemes:
+    AccessToken:
+      name: AccessToken
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    RefreshToken:
+      name: RefreshToken
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

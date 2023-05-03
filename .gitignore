@@ -1,0 +1,14 @@
+# npm
+node_modules/
+
+# ESLint
+.eslintcache
+
+# dist
+/dist/
+
+# demo
+/demo/out.json
+
+# generated code by cli
+/.generated/
