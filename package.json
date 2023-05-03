@@ -6,6 +6,7 @@
     "access": "public"
   },
   "type": "module",
+  "files": ["dist"],
   "main": "./dist/main.js",
   "bin": "./dist/bin.js",
   "exports": {
