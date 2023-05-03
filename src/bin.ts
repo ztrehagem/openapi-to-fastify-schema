@@ -26,7 +26,7 @@ declare const operationMap: OperationMap;
 export default operationMap;
 `;
 
-const outDir = new URL("../../.generated/", import.meta.url);
+const outDir = new URL("../.generated/", import.meta.url);
 
 await fs.mkdir(outDir, { recursive: true });
 
