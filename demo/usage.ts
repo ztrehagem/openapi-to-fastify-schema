@@ -4,7 +4,7 @@ import operations from "../.generated/operationMap.js";
 
 declare const app: FastifyInstance;
 
-const { method, url, schema } = operations.getUser;
+const { method, url, schema } = operations.createPost;
 
 app.withTypeProvider<JsonSchemaToTsProvider>().route({
   method,
@@ -12,10 +12,15 @@ app.withTypeProvider<JsonSchemaToTsProvider>().route({
   schema,
   handler: async (req, reply) => {
     req.params.userHandle;
-    await reply.status(200).send({
-      user: {
-        handle: "foo",
-        name: "bar",
+    await reply.status(201).send({
+      post: {
+        id: 1,
+        body: "Hello",
+        dateTime: "2023-01-01T00:00:00Z",
+        user: {
+          handle: "johndoe",
+          name: "John Doe",
+        },
       },
       // irregularProperty: "foo",
     });
